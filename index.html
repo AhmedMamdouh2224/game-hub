@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f1e8" />
+  <title>XO | Tic-Tac-Toe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="." aria-label="XO home">
+        <span class="brand-mark" aria-hidden="true">×</span>
+        <span>XO</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary navigation">
+        <button class="nav-button active" id="game-nav" type="button">Games</button>
+        <button class="nav-button" id="dashboard-nav" type="button">Dashboard</button>
+        <button class="nav-button" id="leaderboard-nav" type="button">Leaderboards</button>
+        <button class="nav-button" id="players-nav" type="button">Players</button>
+        <button class="nav-button" id="settings-nav" type="button">Settings</button>
+      </nav>
+      <div class="topbar-actions">
+        <div class="match-label"><span class="live-dot"></span> Local match</div>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">☾</button>
+      </div>
+    </header>
+
+    <section class="games-view" id="games-view" aria-labelledby="games-title" hidden>
+      <div class="hub-heading"><p class="eyebrow">Choose your table</p><h1 id="games-title">Games<br /><em>to play.</em></h1><p class="intro-copy">Two tables, one account, and plenty of room for a rematch.</p></div>
+      <div class="game-card-grid">
+        <article class="game-card game-card-xo"><div class="game-card-art xo-art" aria-hidden="true"><span>×</span><span>○</span><span>×</span></div><div class="game-card-content"><p class="eyebrow">Classic / strategy</p><h2>XO</h2><p>Claim three in a row in the original quick-match challenge.</p><button class="button button-primary" id="play-xo" type="button">Play XO <span>→</span></button></div></article>
+        <article class="game-card game-card-domino"><div class="game-card-art domino-art" aria-hidden="true"><span class="mini-domino"></span><span class="mini-domino"></span><span class="mini-domino"></span></div><div class="game-card-content"><p class="eyebrow">Table / classic</p><h2>Dominoes</h2><p>Build the chain, empty your hand, and outscore the table.</p><button class="button domino-button" id="play-dominoes" type="button">Play Dominoes <span>→</span></button></div></article>
+      </div>
+    </section>
+
+    <section class="game-view" id="game-view" aria-label="Tic-Tac-Toe game" hidden>
+      <div class="game-layout">
+      <div class="intro-panel">
+        <p class="eyebrow">Classic, reimagined</p>
+        <h1>Make your<br /><em>mark.</em></h1>
+        <p class="intro-copy">A tiny board. A big moment. Take turns, think ahead, and own the center.</p>
+        <div class="rule-line"></div>
+        <p class="tip"><span class="tip-icon">✦</span> First to connect three wins the round.</p>
+      </div>
+
+      <div class="game-panel">
+        <div class="scoreboard" aria-label="Scoreboard">
+          <div class="score-card player-x active" data-player="X">
+            <div class="player-heading"><span class="player-symbol x-symbol">×</span><span id="name-x">Player X</span></div>
+            <strong id="score-x">0</strong>
+          </div>
+          <div class="score-divider">:</div>
+          <div class="score-card player-o" data-player="O">
+            <div class="player-heading"><span class="player-symbol o-symbol">○</span><span id="name-o">Player O</span></div>
+            <strong id="score-o">0</strong>
+          </div>
+        </div>
+
+        <div class="status-row" aria-live="polite">
+          <span class="turn-indicator"></span>
+          <span id="status-text">Player X's turn</span>
+        </div>
+
+        <div class="board" role="grid" aria-label="Tic-Tac-Toe board">
+          <button class="cell" type="button" role="gridcell" aria-label="Top left, empty" data-index="0"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Top center, empty" data-index="1"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Top right, empty" data-index="2"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Middle left, empty" data-index="3"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Middle center, empty" data-index="4"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Middle right, empty" data-index="5"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Bottom left, empty" data-index="6"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Bottom center, empty" data-index="7"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Bottom right, empty" data-index="8"></button>
+        </div>
+
+        <div class="actions">
+          <button class="button button-primary" id="new-round" type="button"><span>↻</span> New round</button>
+          <button class="button button-quiet" id="pause-game" type="button">Pause</button>
+          <button class="button button-quiet" id="reset-match" type="button">Reset match</button>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="domino-view" id="domino-view" aria-labelledby="domino-title" hidden>
+      <div class="domino-topbar"><button class="domino-link" id="domino-back" type="button">← Games</button><span class="domino-kicker">Table 02 / Classic set</span><button class="domino-new" id="domino-new" type="button">New game</button></div>
+      <div class="domino-heading"><div><p class="domino-eyebrow">A game of ends</p><h1 id="domino-title">Dominoes</h1><p>Match the open ends. Empty your hand. Own the table.</p></div><div class="domino-status" id="domino-status">Ready to play</div></div>
+      <div class="domino-score-row"><div class="domino-player-card active" data-domino-player="X"><span id="domino-name-x">Player X</span><strong id="domino-score-x">0</strong><small>score</small></div><div class="domino-stock"><strong id="domino-stock-count">14</strong><span>in stock</span></div><div class="domino-player-card" data-domino-player="O"><span id="domino-name-o">Player O</span><strong id="domino-score-o">0</strong><small>score</small></div></div>
+      <div class="domino-table">
+        <div class="domino-opponent"><span class="domino-label" id="domino-opponent-label">Player O's hand</span><div id="domino-opponent-hand" class="domino-hidden-hand"></div></div>
+        <div class="domino-chain-wrap"><div class="domino-chain" id="domino-chain" aria-live="polite"><span class="domino-empty">The first tile opens the table.</span></div></div>
+        <div class="domino-player-area"><div class="domino-label"><span id="domino-turn-label">Player X's hand</span><span id="domino-move-hint">Choose a playable tile</span></div><div id="domino-player-hand" class="domino-hand"></div><div class="domino-actions"><button class="domino-button" id="domino-draw" type="button">Draw tile</button><button class="domino-button domino-button-quiet" id="domino-pass" type="button">Pass</button></div></div>
+      </div>
+      <div class="domino-start-screen" id="domino-start-screen" hidden><div class="domino-logo">◈</div><p id="domino-start-copy">Welcome to the table</p><strong id="domino-countdown"></strong></div>
+    </section>
+
+    <section class="platform-view" id="leaderboards-view" aria-labelledby="leaderboards-title" hidden><div class="platform-heading"><p class="eyebrow">Public standings</p><h1 id="leaderboards-title">Leaderboards.</h1></div><div class="leaderboard-tabs"><button class="leaderboard-tab active" id="overall-tab" type="button">Overall</button><button class="leaderboard-tab" id="dominoes-tab" type="button">Dominoes</button></div><div class="leaderboard-wrap" id="overall-leaderboard-wrap"><table class="leaderboard"><thead><tr><th>Rank</th><th>Player</th><th>Best score</th><th>Games</th><th>Wins</th><th>Level</th></tr></thead><tbody id="overall-leaderboard-body"></tbody></table></div><div class="leaderboard-wrap" id="domino-leaderboard-wrap" hidden><table class="leaderboard"><thead><tr><th>Rank</th><th>Player</th><th>Best score</th><th>Games</th><th>Wins</th><th>Win rate</th><th>Streak</th></tr></thead><tbody id="domino-leaderboard-body"></tbody></table></div></section>
+    <section class="platform-view" id="players-view" aria-labelledby="players-title" hidden><div class="platform-heading"><p class="eyebrow">Public profiles</p><h1 id="players-title">Players.</h1></div><div class="public-player-grid" id="public-player-grid"></div></section>
+    <section class="platform-view" id="settings-view" aria-labelledby="settings-title" hidden><div class="platform-heading"><p class="eyebrow">Platform controls</p><h1 id="settings-title">Settings.</h1></div><div class="settings-panel"><div><h2>Appearance</h2><p>Choose the shared website theme. Dominoes keeps its own table atmosphere in either mode.</p></div><button class="button button-primary" id="settings-theme" type="button">Switch theme</button></div><div class="settings-panel"><div><h2>Saved data</h2><p>Remove all local player accounts, game statistics, and match history.</p></div><button class="button button-quiet" id="settings-clear" type="button">Clear data</button></div></section>
+
+    <section class="dashboard-view" id="dashboard-view" aria-labelledby="dashboard-title" hidden>
+      <div class="dashboard-heading">
+        <div>
+          <p class="eyebrow">The long game</p>
+          <h1 id="dashboard-title">Player<br /><em>dashboard.</em></h1>
+        </div>
+        <button class="button button-quiet" id="clear-data" type="button">Clear data</button>
+      </div>
+      <div class="stat-grid" aria-label="Player statistics">
+        <div class="stat-card"><span>Total players</span><strong id="total-players">0</strong></div>
+        <div class="stat-card"><span>Total games</span><strong id="total-games">0</strong></div>
+        <div class="stat-card"><span>Total wins</span><strong id="total-wins">0</strong></div>
+        <div class="stat-card accent-stat"><span>Highest score</span><strong id="highest-score">0</strong></div>
+      </div>
+      <div class="section-heading">
+        <div><p class="eyebrow">All-time standings</p><h2>Leaderboard</h2></div>
+        <span class="record-note" id="record-note">Sorted by best score</span>
+      </div>
+      <div class="leaderboard-wrap">
+        <table class="leaderboard">
+          <thead><tr><th>Rank</th><th>Player</th><th>Best score</th><th>Games played</th><th>Wins</th><th>Level</th><th>Achievements</th></tr></thead>
+          <tbody id="leaderboard-body"><tr><td colspan="7" class="empty-leaderboard">Your first result will appear here.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer"><span>XO / 01</span><span>Play fair. Play again.</span></footer>
+  </main>
+
+  <div class="loading-screen" id="loading-screen" aria-hidden="true">
+    <div class="loading-mark">×</div>
+    <p>Setting the board</p>
+  </div>
+
+  <div class="welcome-modal" id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+    <div class="welcome-card">
+      <p class="eyebrow">Welcome to XO</p>
+      <h2 id="welcome-title">Who’s playing?</h2>
+      <p class="welcome-copy">Create a private player credential or return with your name and private ID. IDs stay hidden from the public game.</p>
+      <form id="welcome-form">
+        <div class="session-options">
+          <label for="game-mode">Game mode</label>
+          <select id="game-mode"><option value="pvp">Player vs Player</option><option value="ai">Player vs AI</option></select>
+          <div id="difficulty-field" hidden><label for="ai-difficulty">Difficulty</label><select id="ai-difficulty"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option><option value="expert">Expert</option><option value="master">Master</option><option value="impossible">Impossible</option></select></div>
+        </div>
+        <fieldset class="player-auth" data-mark="X">
+          <legend><span class="player-symbol x-symbol">×</span> Player X</legend>
+          <label for="player-x-mode">Account type</label>
+          <select class="player-mode" id="player-x-mode" aria-label="Player X account type">
+            <option value="new">New player</option><option value="returning">Returning player</option>
+          </select>
+          <label for="player-x-name">Player name</label>
+          <input id="player-x-name" name="playerX" maxlength="18" autocomplete="name" placeholder="Your name" required />
+          <label for="player-x-id">Private player ID</label>
+          <div class="secret-input"><input id="player-x-id" name="playerXId" maxlength="24" pattern="[A-Za-z0-9_\-]{4,24}" placeholder="Choose a private ID" required /><button class="show-secret" type="button" data-target="player-x-id" aria-label="Show Player X private ID">Show</button></div>
+          <div class="confirm-field"><label for="player-x-id-confirm">Confirm private ID</label><div class="secret-input"><input id="player-x-id-confirm" name="playerXIdConfirm" maxlength="24" pattern="[A-Za-z0-9_\-]{4,24}" placeholder="Repeat private ID" required /><button class="show-secret" type="button" data-target="player-x-id-confirm" aria-label="Show Player X ID confirmation">Show</button></div></div>
+          <p class="auth-feedback" id="player-x-feedback" role="alert" hidden></p>
+        </fieldset>
+        <fieldset class="player-auth" data-mark="O">
+          <legend><span class="player-symbol o-symbol">○</span> Player O</legend>
+          <label for="player-o-mode">Account type</label>
+          <select class="player-mode" id="player-o-mode" aria-label="Player O account type">
+            <option value="new">New player</option><option value="returning">Returning player</option>
+          </select>
+          <label for="player-o-name">Player name</label>
+          <input id="player-o-name" name="playerO" maxlength="18" placeholder="Their name" required />
+          <label for="player-o-id">Private player ID</label>
+          <div class="secret-input"><input id="player-o-id" name="playerOId" maxlength="24" pattern="[A-Za-z0-9_\-]{4,24}" placeholder="Choose a private ID" required /><button class="show-secret" type="button" data-target="player-o-id" aria-label="Show Player O private ID">Show</button></div>
+          <div class="confirm-field"><label for="player-o-id-confirm">Confirm private ID</label><div class="secret-input"><input id="player-o-id-confirm" name="playerOIdConfirm" maxlength="24" pattern="[A-Za-z0-9_\-]{4,24}" placeholder="Repeat private ID" required /><button class="show-secret" type="button" data-target="player-o-id-confirm" aria-label="Show Player O ID confirmation">Show</button></div></div>
+          <p class="auth-feedback" id="player-o-feedback" role="alert" hidden></p>
+        </fieldset>
+        <button class="button button-primary welcome-submit" type="submit">Start playing <span>→</span></button>
+      </form>
+    </div>
+  </div>
+  <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+  <script src="script.js"></script>
+</body>
+</html>
